@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model cars {
+  plate_number                           Int        @id @map("plate number")
+  type                                   String     @db.VarChar(255)
+  model                                  String     @db.VarChar(255)
+  year_manifacture                       DateTime   @map("year manifacture") @db.Date
+  drive_phone                            Int        @map("drive phone")
+  mechanic_name                          String     @map("mechanic name") @db.VarChar(255)
+  payments_payments_payment_numberTocars payments?  @relation("payments_payment_numberTocars")
+  payments_payments_caridTocars          payments[] @relation("payments_caridTocars")
+}
+
+model payments {
+  payment_number                     Int      @id @default(autoincrement())
+  amount_paid                        Int
+  payment_date                       DateTime @db.Date
+  model                              String   @db.VarChar(255)
+  carid                              Int
+  cars_payments_payment_numberTocars cars     @relation("payments_payment_numberTocars", fields: [payment_number], references: [plate_number], onUpdate: Cascade, map: "drive phone")
+  cars_payments_caridTocars          cars     @relation("payments_caridTocars", fields: [carid], references: [plate_number], onUpdate: Cascade, map: "test")
+
+  @@index([carid], map: "test")
+}
